@@ -18,8 +18,15 @@
 
     <ItemGroup>
       <Folder Include="Controllers\" />
-      <Folder Include="Models\" />
       <Folder Include="Views\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="bin\Debug\net9.0\appsettings.json" />
     </ItemGroup>
 
 </Project>
