@@ -2,6 +2,8 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Dapper;
 
+namespace Flashcards.Emgigas.Models;
+
 public class DataAccess
 {
     // Get connection string for database
@@ -25,7 +27,7 @@ public class DataAccess
             {
                 connection.Open();
 
-
+                // create table for Stacks
                 string createStackTable =
                     @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Stacks')
                     CREATE TABLE Stacks (
@@ -34,7 +36,7 @@ public class DataAccess
                         PRIMARY KEY (Id)
                     );";
                 connection.Execute(createStackTable);
-
+                // create table for Flashcards
                 string createFlashcardTable =
                     @"IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Flashcards')
                     CREATE TABLE Flashcards (
@@ -52,7 +54,7 @@ public class DataAccess
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"There was an error: {ex.Message}");
+            Console.WriteLine($"There was an error creating the tables: {ex.Message}");
         }
     }
 }
