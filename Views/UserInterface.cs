@@ -1,4 +1,3 @@
-using Flashcards.Emgigas.Controllers;
 using Spectre.Console;
 using static Flashcards.Emgigas.Controllers.Enums;
 

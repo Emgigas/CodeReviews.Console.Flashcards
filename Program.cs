@@ -2,7 +2,7 @@
 using Flashcards.Emgigas.Views;
 
 
-var DataAccess = new DataAccess();
-DataAccess.CreateTables();
+var dataAccess = new DataAccess();
+dataAccess.CreateTables();
 
 UserInterface.MainMenu();
