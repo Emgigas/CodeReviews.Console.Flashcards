@@ -1,6 +1,6 @@
 namespace Flashcards.Emgigas.Models;
 
-public class Flashcards
+public class Flashcard
 {
     public int Id { get; set; }
     public string Question { get; set; }

@@ -1,9 +1,9 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Dapper;
+using Flashcards.Emgigas.Models;
 
-namespace Flashcards.Emgigas.Models;
-
+namespace Flashcards.Emgigas;
 public class DataAccess
 {
     // Get connection string for database
@@ -11,7 +11,7 @@ public class DataAccess
         .AddJsonFile("appsettings.json")
         .Build();
 
-    private string connectionString;
+    private string? connectionString;
 
     public DataAccess()
     {
@@ -57,4 +57,49 @@ public class DataAccess
             Console.WriteLine($"There was an error creating the tables: {ex.Message}");
         }
     }
+
+    // Method to insert new Stack into SQL DB
+    internal void InsertStack(Stack stack)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string insertQuery = @"
+            INSERT INTO Stacks (Name) VALUES (@Name)";
+
+                connection.Execute(insertQuery, new { stack.Name });
+            }
+        } 
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem inserting the stack: {ex.Message}");
+        }
+    }
+    
+    // Method to pull back all Stack Names & StackID for use when creating Flashcards
+
+    internal IEnumerable<Stack> GetStacks()
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string selectQuery = @"SELECT Id, Name FROM Stacks;";
+
+                return connection.Query<Stack>(selectQuery);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem retrieving the stacks: {ex.Message}");
+            return Enumerable.Empty<Stack>();
+        }
+    }
+    
+    // Method to create Flashcard and assign to Stack using GetStack method
 }
