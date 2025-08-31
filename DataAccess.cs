@@ -4,6 +4,7 @@ using Dapper;
 using Flashcards.Emgigas.Models;
 
 namespace Flashcards.Emgigas;
+
 public class DataAccess
 {
     // Get connection string for database
@@ -72,13 +73,13 @@ public class DataAccess
 
                 connection.Execute(insertQuery, new { stack.Name });
             }
-        } 
+        }
         catch (Exception ex)
         {
             Console.WriteLine($"There was a problem inserting the stack: {ex.Message}");
         }
     }
-    
+
     // Method to pull back all Stack Names & StackID for use when creating Flashcards
 
     internal IEnumerable<Stack> GetStacks()
@@ -100,6 +101,26 @@ public class DataAccess
             return Enumerable.Empty<Stack>();
         }
     }
-    
+
     // Method to create Flashcard and assign to Stack using GetStack method
+
+    internal void InsertFlashcard(Flashcard flashcard)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string insertQuery = @"
+                INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)";
+
+                connection.Execute(insertQuery, new { flashcard.Question, flashcard.Answer, flashcard.StackId });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
+        }
+    }
 }
