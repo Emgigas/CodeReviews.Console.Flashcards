@@ -33,7 +33,8 @@ internal static class SeedData
             new Flashcard { StackId = 4, Question = "Grazie", Answer = "Thank you" },
             new Flashcard { StackId = 5, Question = "Dziękuję", Answer = "Thank you" },
         };
-        
+
         var dataAccess = new DataAccess();
         dataAccess.InsertSeedData(stacks, flashcards);
+    }
 }
