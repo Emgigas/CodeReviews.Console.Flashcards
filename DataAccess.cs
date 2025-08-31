@@ -98,6 +98,26 @@ public class DataAccess
         }
     }
 
+    // Deletes stack from table that matches the id provided
+    internal void DeleteStack(int id)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                
+                string deleteQuery = @"DELETE FROM Stacks WHERE Id = @Id";
+                
+                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem deleting the stack: {ex.Message}");
+        }
+    }
+
     // Method to pull back all Stack Names & StackID for use when creating Flashcards. IEnumerable type is used for LINQ later on
 
     internal IEnumerable<Stack> GetStacks()
@@ -139,6 +159,50 @@ public class DataAccess
         catch (Exception ex)
         {
             Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
+        }
+    }
+
+    // Deletes flashcard from table that matches id provided
+    internal void DeleteFlashcard(int id)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string deleteQuery = @"DELETE FROM Flashcards WHERE Id = @Id";
+                
+                int rowsAffected = connection.Execute(deleteQuery, new { Id = id });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem deleting the flashcard: {ex.Message}");
+        }
+    }
+    
+    // Method to pull back all Stack Names & StackID for use when creating Flashcards. IEnumerable type is used for LINQ later on
+
+    internal List<Flashcard> GetFlashcards(int stackId)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string selectQuery = @"SELECT * FROM Flashcards WHERE StackId = @StackId;";
+
+                var results = connection.Query<Flashcard>(selectQuery, new { StackId = stackId })
+                    .ToList();
+                
+                return results;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was a problem retrieving the flashcards: {ex.Message}");
+            return new List<Flashcard>();
         }
     }
 
