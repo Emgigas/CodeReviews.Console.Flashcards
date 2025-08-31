@@ -152,8 +152,8 @@ public class DataAccess
             {
                 try
                 {
-                    connection.Execute("INSERT INTO Stacks (Name) VALUES (@Name)", stacks);
-                    connection.Execute("INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)", flashcards);
+                    connection.Execute("INSERT INTO Stacks (Name) VALUES (@Name)", stacks, transaction: transaction);
+                    connection.Execute("INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)", flashcards, transaction: transaction);
                     
                     transaction.Commit();
                 }
