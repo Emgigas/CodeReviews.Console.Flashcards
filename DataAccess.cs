@@ -59,6 +59,24 @@ public class DataAccess
         }
     }
 
+    internal void DropTables()
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                
+                connection.Execute("DROP TABLE Flashcards");
+                connection.Execute("DROP TABLE Stacks");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"There was an error dropping the tables: {ex.Message}");
+        }
+    }
+
     // Method to insert new Stack into SQL DB
     internal void InsertStack(Stack stack)
     {
@@ -143,7 +161,6 @@ public class DataAccess
                 {
                     transaction.Rollback(); // Rolls back transaction in the event something goes wrong
                     Console.WriteLine($"There was a problem inserting the seed data: {ex.Message}");
-                    throw;
                 }
             }
         }

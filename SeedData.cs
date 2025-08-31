@@ -35,6 +35,8 @@ internal static class SeedData
         };
 
         var dataAccess = new DataAccess();
+        dataAccess.DropTables();
+        dataAccess.CreateTables();
         dataAccess.InsertSeedData(stacks, flashcards);
     }
 }
