@@ -88,6 +88,7 @@ internal class UserInterface
         throw new NotImplementedException();
     }
 
+    // Gets name of stack from user and inserts into table Stacks
     private static void AddStack()
     {
         // Initialise stack object
@@ -104,6 +105,26 @@ internal class UserInterface
         // Insert Stack into DB
         var dataAccess = new DataAccess();
         dataAccess.InsertStack(stack);
+    }
+
+    // Allows user to choose a stack from table of stacks. Id then used to create flashcards.
+    private static int ChooseStack()
+    {
+        // Access database and get all stacks
+        var dataAccess = new DataAccess();
+        var stacks = dataAccess.GetStacks();
+        
+        // Convert stack names from Get Stacks into an Array only capturing name
+        var stackArray = stacks.Select(s => s.Name).ToArray();
+        // Prompt user to pick a stack by Name
+        var stackOptions = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Choose a stack.")
+                .AddChoices(stackArray));
+        // Return Id relating to selected stack name
+        var stackId = stacks.Single(s => s.Name == stackOptions).Id; // This works by returning the IEnumerable stack where Name == User choice and then returns the related Id
+        return stackId;
+
     }
 
     private static void UpdateStack()
@@ -161,9 +182,34 @@ internal class UserInterface
         throw new NotImplementedException();
     }
 
+    // Gets StackId, Question and Answer from the user and inserts into Flashcards table
     private static void AddFlashcard()
     {
-        throw new NotImplementedException();
+        // Initialise Flashcard object
+        Flashcard flashcard = new Flashcard();
+        
+        // Get user to provide StackId by selecting name from a prompt
+        flashcard.StackId = ChooseStack();
+        
+        // Ask user for question for this flashcard and validate
+        flashcard.Question = AnsiConsole.Ask<string>("What is the question?");
+
+        while (string.IsNullOrEmpty(flashcard.Question))
+        {
+            flashcard.Question = AnsiConsole.Ask<string>("Question cannot be blank. What is the question?");
+        }
+        
+        // Ask use for answer to the question for this flashcard and validate
+        flashcard.Answer = AnsiConsole.Ask<string>("What is the answer?");
+
+        while (string.IsNullOrEmpty(flashcard.Answer))
+        {
+            flashcard.Answer = AnsiConsole.Ask<string>("Answer cannot be blank. What is the answer?");
+        }
+        
+        // Access database methods
+        var dataAccess = new DataAccess();
+        dataAccess.InsertFlashcard(flashcard);
     }
 
     private static void UpdateFlashcard()

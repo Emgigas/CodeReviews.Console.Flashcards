@@ -80,7 +80,7 @@ public class DataAccess
         }
     }
 
-    // Method to pull back all Stack Names & StackID for use when creating Flashcards
+    // Method to pull back all Stack Names & StackID for use when creating Flashcards. IEnumerable type is used for LINQ later on
 
     internal IEnumerable<Stack> GetStacks()
     {
