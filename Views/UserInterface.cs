@@ -1,5 +1,6 @@
 using Spectre.Console;
 using static Flashcards.Emgigas.Controllers.Enums;
+using Flashcards.Emgigas.Models;
 
 namespace Flashcards.Emgigas.Views;
 
@@ -75,7 +76,8 @@ internal class UserInterface
                     DeleteStack();
                     break;
                 case StackMenuOptions.MainMenu:
-                    isProgramRunning = false; // Using MainMenu here causes the program to create more while loops whereas changing this local variable closes this while loop only.
+                    isProgramRunning =
+                        false; // Using MainMenu here causes the program to create more while loops whereas changing this local variable closes this while loop only.
                     break;
             }
         }
@@ -85,22 +87,35 @@ internal class UserInterface
     {
         throw new NotImplementedException();
     }
-    
+
     private static void AddStack()
     {
-        throw new NotImplementedException();
+        // Initialise stack object
+        Stack stack = new Stack();
+
+        // Request stack name
+        stack.Name = AnsiConsole.Ask<String>("What should the stack be called?");
+        // Validate stack name
+        while (string.IsNullOrEmpty(stack.Name))
+        {
+            stack.Name = AnsiConsole.Ask<String>("Stack's name cannot be blank. Please provide a stack name.");
+        }
+
+        // Insert Stack into DB
+        var dataAccess = new DataAccess();
+        dataAccess.InsertStack(stack);
     }
-    
+
     private static void UpdateStack()
     {
         throw new NotImplementedException();
     }
-    
+
     private static void DeleteStack()
     {
         throw new NotImplementedException();
     }
-    
+
     internal static void FlashcardsMenu()
     {
         var isProgramRunning = true;
@@ -134,7 +149,8 @@ internal class UserInterface
                     DeleteFlashcard();
                     break;
                 case FlashcardsMenuOptions.MainMenu:
-                    isProgramRunning = false; // Using MainMenu here causes the program to create more while loops whereas changing this local variable closes this while loop only.
+                    isProgramRunning =
+                        false; // Using MainMenu here causes the program to create more while loops whereas changing this local variable closes this while loop only.
                     break;
             }
         }
@@ -159,7 +175,7 @@ internal class UserInterface
     {
         throw new NotImplementedException();
     }
-    
+
     internal static void StudyArea()
     {
         throw new NotImplementedException();
