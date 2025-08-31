@@ -35,5 +35,5 @@ internal static class SeedData
         };
         
         var dataAccess = new DataAccess();
-        dataAccess.BulkInsertRecords(stacks, flashcards);
+        dataAccess.InsertSeedData(stacks, flashcards);
 }

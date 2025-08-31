@@ -123,4 +123,29 @@ public class DataAccess
             Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
         }
     }
+
+    internal void InsertSeedData(List<Stack> stacks, List<Flashcard> flashcards)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    connection.Execute("INSERT INTO Stacks (Name) VALUES (@Name)", stacks);
+                    connection.Execute("INSERT INTO Flashcards (Question, Answer, StackId) VALUES (@Question, @Answer, @StackId)", flashcards);
+                    
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback(); // Rolls back transaction in the event something goes wrong
+                    Console.WriteLine($"There was a problem inserting the seed data: {ex.Message}");
+                    throw;
+                }
+            }
+        }
+    }
 }
