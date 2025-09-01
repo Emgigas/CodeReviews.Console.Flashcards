@@ -175,6 +175,19 @@ public class DataAccess
             Console.WriteLine($"There was a problem inserting the flashcard: {ex.Message}");
         }
     }
+    
+    // Updates flashcard data in table on DB
+
+    internal void UpdateFlashcard(Flashcard flashcard)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string updateQuery = @"UPDATE Flashcards SET Question = @Question, Answer = @Answer, StackId = @StackId WHERE Id = @Id";
+
+            connection.Execute(updateQuery, new { flashcard.Id, flashcard.Question, flashcard.Answer, flashcard.StackId });
+        }
+    }
 
     // Deletes flashcard from table that matches id provided
     internal void DeleteFlashcard(int id)
@@ -217,6 +230,46 @@ public class DataAccess
         {
             Console.WriteLine($"There was a problem retrieving the flashcards: {ex.Message}");
             return new List<Flashcard>();
+        }
+    }
+
+    internal string GetCurrentQuestion(int stackId, int flashcardId)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string queryString = @"SELECT Question FROM Flashcards WHERE Id = @Id and StackId = @StackId;";
+                string currentQuestion =  connection.QueryFirst<string>(queryString, new { Id = flashcardId, StackId = stackId });
+                
+                return currentQuestion;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error getting current question: {ex.Message}");
+            return "";
+        }
+    }
+    
+    internal string GetCurrentAnswer(int stackId, int flashcardId)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string queryString = @"SELECT Answer FROM Flashcards WHERE Id = @Id and StackId = @StackId;";
+                string currentAnswer =  connection.QueryFirst<string>(queryString, new { Id = flashcardId, StackId = stackId });
+                
+                return currentAnswer;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error getting current question: {ex.Message}");
+            return "";
         }
     }
 

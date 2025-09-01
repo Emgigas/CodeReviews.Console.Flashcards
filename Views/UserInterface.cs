@@ -214,20 +214,10 @@ internal class UserInterface
         flashcard.StackId = ChooseStack("Choose a stack to add a flashcard to.");
         
         // Ask user for question for this flashcard and validate
-        flashcard.Question = AnsiConsole.Ask<string>("What is the question?");
-
-        while (string.IsNullOrEmpty(flashcard.Question))
-        {
-            flashcard.Question = AnsiConsole.Ask<string>("Question cannot be blank. What is the question?");
-        }
+        flashcard.Question = GetQuestion("What is the question?");
         
         // Ask use for answer to the question for this flashcard and validate
-        flashcard.Answer = AnsiConsole.Ask<string>("What is the answer?");
-
-        while (string.IsNullOrEmpty(flashcard.Answer))
-        {
-            flashcard.Answer = AnsiConsole.Ask<string>("Answer cannot be blank. What is the answer?");
-        }
+        flashcard.Answer = GetAnswer("What is the answer?");
         
         // Access database methods
         var dataAccess = new DataAccess();
@@ -251,7 +241,20 @@ internal class UserInterface
 
     private static void UpdateFlashcard()
     {
-        throw new NotImplementedException();
+        var dataAccess = new DataAccess();
+        Flashcard flashcard = new Flashcard();
+        
+        var stackId = ChooseStack("Choose a stack where the flashcard you wish to update is:");
+        flashcard.Id = ChooseFlashcard("Choose the flashcard you wish to update:", stackId);
+        
+        flashcard.Question = GetQuestion($"The current question is: {dataAccess.GetCurrentQuestion(stackId, flashcard.Id)}. What is the question?");
+        
+        flashcard.Answer = GetAnswer($"The current answer is: {dataAccess.GetCurrentAnswer(stackId, flashcard.Id)}. What is the answer?");
+        
+        flashcard.StackId = ChooseStack("Choose the stack where the flashcard should be:");
+        
+        dataAccess.UpdateFlashcard(flashcard);
+
     }
 
     private static void DeleteFlashcard()
@@ -264,6 +267,30 @@ internal class UserInterface
         
         var dataAccess = new DataAccess();
         dataAccess.DeleteFlashcard(flashcard);
+    }
+
+    // Asks user for Flashcard question
+    private static string GetQuestion(string message)
+    {
+        var question = AnsiConsole.Ask<string>(message);
+        
+        while (string.IsNullOrEmpty(question))
+            {
+            question = AnsiConsole.Ask<string>($"Question cannot be empty. {message}");
+            }
+        return question;
+    }
+    
+    // Asks user for flashcard answer
+    private static string GetAnswer(string message)
+    {
+        var answer = AnsiConsole.Ask<string>(message);
+        while (string.IsNullOrEmpty(answer))
+        {
+            answer = AnsiConsole.Ask<string>($"Answer cannot be empty. {message}");
+        }
+        
+        return answer;
     }
 
     internal static void StudyArea()
