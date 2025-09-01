@@ -129,7 +129,23 @@ internal class UserInterface
 
     private static void UpdateStack()
     {
-        throw new NotImplementedException();
+        // Create new Stack object
+        var stack = new Stack();
+        
+        // Get stack Id to update
+        stack.Id = ChooseStack("Choose a stack to update: ");
+        
+        // Request new stack name, validate it is not blank
+        stack.Name =  AnsiConsole.Ask<String>("What should the stack be called?");
+
+        while (string.IsNullOrEmpty(stack.Name))
+        {
+           stack.Name = AnsiConsole.Ask<String>("Stack name cannot be empty. What should the stack be called?");
+        }
+        
+        // Pass to database
+        var dataAccess = new DataAccess();
+        dataAccess.UpdateStack(stack);
     }
 
     private static void DeleteStack()

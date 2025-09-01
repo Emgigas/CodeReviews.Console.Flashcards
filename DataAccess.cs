@@ -97,6 +97,20 @@ public class DataAccess
             Console.WriteLine($"There was a problem inserting the stack: {ex.Message}");
         }
     }
+    
+    // Updates Stack name in stack table of database
+
+    internal void UpdateStack(Stack stack)
+    {
+        using (var connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            
+            string updateQuery = @"UPDATE Stacks SET Name = @Name WHERE Id = @Id";
+            
+            connection.Execute(updateQuery, new { stack.Name, stack.Id });
+        }
+    }
 
     // Deletes stack from table that matches the id provided
     internal void DeleteStack(int id)
