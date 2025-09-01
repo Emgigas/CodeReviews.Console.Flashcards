@@ -239,6 +239,7 @@ internal class UserInterface
         return flashcardId;
     }
 
+  // Asks user which flashcard to update
     private static void UpdateFlashcard()
     {
         var dataAccess = new DataAccess();
@@ -257,6 +258,7 @@ internal class UserInterface
 
     }
 
+    // Asks user which flashcard to delete
     private static void DeleteFlashcard()
     {
         var stackId = ChooseStack("Which stack contains the Flashcard you wish to delete?");
@@ -297,5 +299,4 @@ internal class UserInterface
     {
         throw new NotImplementedException();
     }
-    // Displays flashcard menu using Spectre Prompts
 }
